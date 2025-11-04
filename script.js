@@ -36,12 +36,14 @@ function createGrid() {
         }
     }
 }
+createGrid();
 //we cicle through the gameGrid array and draw each cell
 function handleGameGrid() {
     for (let i = 0; i < gameGrid.length; i++) {
         gameGrid[i].draw();
     }
 }
+
 // projectiles
 //defenders
 //enemies
@@ -52,6 +54,7 @@ function handleGameGrid() {
 function animate() {
     ctx.fillStyle = 'blue';
     ctx.fillRect(0, 0, controlsBar.width, controlsBar.height);
+    handleGameGrid();
     requestAnimationFrame(animate);
 }
 
