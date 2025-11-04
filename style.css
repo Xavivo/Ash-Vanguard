@@ -10,4 +10,12 @@ body {
     width: 900px;
     height: 600px;
     background: white;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.orbitron-font {
+  font-family: "Orbitron", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }
