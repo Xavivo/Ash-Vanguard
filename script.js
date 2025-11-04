@@ -10,6 +10,9 @@ const cellGap = 3;
 const gameGrid = [];
 const defenders = [];
 let numberOfResources = 300;
+const enemies = [];
+const enemyPosition = [];
+let frame = 0;
 
 // mouse
 
@@ -111,13 +114,50 @@ function handleDefenders() {
     }
 }
 //enemies
+
+class Enemy {
+    constructor(verticalPosition) {
+        this.x = canvas.width;
+        this.y = verticalPosition;
+        this.width = cellSize;
+        this.height = cellSize;
+        this.speed = Math.random() * 0.2 + 0.4;
+        this.movement = this.speed;
+        this.health = 100;
+        this.maxHealth = this.health;
+    }
+    update(){
+        this.x -= this.movement;
+    }
+    draw() {
+        ctx.fillStyle = 'red';
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.fillStyle = 'black';
+        ctx.font = '30px Arial';
+        ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
+    }
+}
+
+function handleEnemies() {
+    for (let i = 0; i < enemies.length; i++) {
+        enemies[i].update();
+        enemies[i].draw();
+    }
+    //enemies spawn either in line 1, 2,3,4 or 5 at random every 100 frames
+    if (frame % 100 === 0) {
+        let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize;
+        enemies.push(new Enemy(verticalPosition));
+        enemyPosition.push(verticalPosition);
+    }
+}
+
 //resources
 
 //utilities
 function handleGameStatus() {
     ctx.fillStyle = 'gold';
     ctx.font = '30px Arial';
-    fillText('Resources: ' + numberOfResources, 20, 55);
+    ctx.fillText('Resources: ' + numberOfResources, 20, 55);
 }
 
 function animate() {
@@ -126,7 +166,10 @@ function animate() {
     ctx.fillRect(0, 0, controlsBar.width, controlsBar.height);
     handleGameGrid();
     handleDefenders();
+    handleEnemies();
     handleGameStatus();
+    ctx.fillText('Resources: ' + numberOfResources, 20, 55);
+    frame++;
     requestAnimationFrame(animate);
 }
 
