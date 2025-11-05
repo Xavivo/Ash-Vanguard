@@ -229,8 +229,9 @@ function handleFloatingMessages() {
 //enemies
 const enemyTypes = [];
 const enemy1 = new Image();
-enemy1.src = 'assets/enemy1.png';
+enemy1.src = 'public/Enemies/Goblin/GoblinSpritesheet.png';
 enemyTypes.push(enemy1);
+
 class Enemy {
     constructor(verticalPosition) {
         this.x = canvas.width;
