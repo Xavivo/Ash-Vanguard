@@ -187,6 +187,45 @@ function handleDefenders() {
         }
     }
 }
+
+//Floating messages
+
+const floatingMessages = [];
+class FloatingMessage {
+    constructor(value, x, y, size, color) {
+        this.value = value;
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.color = color;
+        this.lifeSpan = 0;
+        this.opacity = 1;
+    }
+    update() {
+        this.y -= 0.3;
+        this.lifeSpan += 1;
+        if (this.opacity > 0.01) this.opacity -= 0.01;
+    }
+    draw() {
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = this.color;
+        ctx.font = this.size + 'px Orbitron';
+        ctx.fillText(this.value, this.x, this.y);
+        ctx.globalAlpha = 1;
+    }
+}
+
+function handleFloatingMessages() {
+    for (let i = 0; i < floatingMessages.length; i++) {
+        floatingMessages[i].update();
+        floatingMessages[i].draw();
+        if (floatingMessages[i].lifeSpan >= 50) {
+            floatingMessages.splice(i, 1);
+            i--;
+        }
+    }
+}
+
 //enemies
 
 class Enemy {
@@ -297,6 +336,23 @@ function handleGameStatus() {
     }
 }
 
+canvas.addEventListener('click', function() {
+    const gridPositionX = mouse.x - (mouse.x % cellSize) + cellGap;
+    const gridPositionY = mouse.y - (mouse.y % cellSize) + cellGap; //this will snap the defender to the grid
+    if (gridPositionY < cellSize) return;
+    for (let i = 0; i < defenders.length; i++) {
+        if (defenders[i].x === gridPositionX && defenders[i].y === gridPositionY)
+        return;
+    }
+    let defenderCost = 100;
+    if (numberOfResources >= defenderCost) {
+        defenders.push(new Defender(gridPositionX, gridPositionY));
+        numberOfResources -= defenderCost;
+    } else {
+        floatingMessages.push(new FloatingMessage('Need More Resources', mouse.x, mouse.y, 20, 'red'));
+    }
+})
+
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'blue';
@@ -307,6 +363,7 @@ function animate() {
     handleProjectiles();
     handleEnemies();
     handleGameStatus();
+    handleFloatingMessages();
     frame++;
     if (!gameOver) requestAnimationFrame(animate);
 }
