@@ -204,7 +204,7 @@ class FloatingMessage {
     update() {
         this.y -= 0.3;
         this.lifeSpan += 1;
-        if (this.opacity > 0.01) this.opacity -= 0.01;
+        if (this.opacity > 0.03) this.opacity -= 0.03;
     }
     draw() {
         ctx.globalAlpha = this.opacity;
@@ -227,7 +227,10 @@ function handleFloatingMessages() {
 }
 
 //enemies
-
+const enemyTypes = [];
+const enemy1 = new Image();
+enemy1.src = 'assets/enemy1.png';
+enemyTypes.push(enemy1);
 class Enemy {
     constructor(verticalPosition) {
         this.x = canvas.width;
@@ -262,6 +265,8 @@ function handleEnemies() {
         //remove enemies if health is 0
         if (enemies[i].health <= 0) {
             let gainedResources = enemies[i].maxHealth / 10;
+            floatingMessages.push(new FloatingMessage('+' + gainedResources, enemies[i].x, enemies[i].y, 30, 'black'));
+            floatingMessages.push(new FloatingMessage('+' + gainedResources, 250, 50, 30, 'gold'));
             numberOfResources += gainedResources;
             score += gainedResources;
             const findThisIndex = enemyPosition.indexOf(enemies[i].y);
@@ -308,6 +313,8 @@ function handleResources() {
         resources[i].draw();
         if (resources[i] && mouse.x && mouse.y && collision(resources[i], mouse)) {
             numberOfResources += resources[i].amount;
+            floatingMessages.push(new FloatingMessage('+' + resources[i].amount, resources[i].x, resources[i].y, 30, 'black'));
+            floatingMessages.push(new FloatingMessage('+' + resources[i].amount, 250, 50, 30, 'gold'));
             resources.splice(i, 1);
             i--;
         }
