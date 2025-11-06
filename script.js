@@ -12,7 +12,7 @@ let enemiesInterval = 600;
 let frame = 0;
 let gameOver = false;
 let score = 0;
-const winningScore = 50; //score needed to win the game
+const winningScore = 500; //score needed to win the game
 
 const gameGrid = [];
 const defenders = [];
@@ -227,10 +227,68 @@ function handleFloatingMessages() {
 }
 
 //enemies
+
+//GOBLIN
 const enemyTypes = [];
 const enemy1 = new Image();
 enemy1.src = 'public/Enemies/Goblin/GoblinSpritesheet.png';
 enemyTypes.push(enemy1);
+//ORC
+const enemy2 = new Image();
+enemy2.src = 'public/Enemies/Orc/OrcSpritesheet.png';
+enemyTypes.push(enemy2);
+//OGRE
+const enemy3 = new Image();
+enemy3.src = 'public/Enemies/Ogre/OgreSpritesheet.png';
+enemyTypes.push(enemy3);
+//REAPER 1
+const enemy4 = new Image();
+enemy4.src = 'public/Enemies/Reaper_Man_1/ReaperMan_1_Spritesheet.png';
+enemyTypes.push(enemy4);
+//REAPER 2
+const enemy5 = new Image();
+enemy5.src = 'public/Enemies/Reaper_Man_2/ReaperMan_2_Spritesheet.png';
+enemyTypes.push(enemy5);
+//REAPER 3
+const enemy6 = new Image();
+enemy6.src = 'public/Enemies/Reaper_Man_3/ReaperMan_3_Spritesheet.png';
+enemyTypes.push(enemy6);
+//ZOMBIE 1
+const enemy7 = new Image();
+enemy7.src = 'public/Enemies/Zombie_Villager_1/ZombieVillager_1_Spritesheet.png';
+enemyTypes.push(enemy7);
+//ZOMBIE 2
+const enemy8 = new Image();
+enemy8.src = 'public/Enemies/Zombie_Villager_2/ZombieVillager_2_Spritesheet.png';
+enemyTypes.push(enemy8);
+//ZOMBIE 3
+const enemy9 = new Image();
+enemy9.src = 'public/Enemies/Zombie_Villager_3/ZombieVillager_3_Spritesheet.png';
+enemyTypes.push(enemy9);
+//FALLEN ANGEL 1
+const enemy10 = new Image();
+enemy10.src = 'public/Enemies/Fallen_Angels_1/FallenAngel_1_Spritesheet.png';
+enemyTypes.push(enemy10);
+//FALLEN ANGEL 2
+const enemy11 = new Image();
+enemy11.src = 'public/Enemies/Fallen_Angels_2/FallenAngel_2_Spritesheet.png';
+enemyTypes.push(enemy11);
+//FALLEN ANGEL 3
+const enemy12 = new Image();
+enemy12.src = 'public/Enemies/Fallen_Angels_3/FallenAngel_3_Spritesheet.png';
+enemyTypes.push(enemy12);
+//DARK ORACLE 1
+const enemy13 = new Image();
+enemy13.src = 'public/Enemies/Dark_Oracle_1/DarkOracle_1_Spritesheet.png';
+enemyTypes.push(enemy13);
+//DARK ORACLE 2
+const enemy14 = new Image();
+enemy14.src = 'public/Enemies/Dark_Oracle_1/DarkOracle_1_Spritesheet.png';
+enemyTypes.push(enemy14);
+//DARK ORACLE 3
+const enemy15 = new Image();
+enemy15.src = 'public/Enemies/Dark_Oracle_1/DarkOracle_1_Spritesheet.png';
+enemyTypes.push(enemy15);
 
 class Enemy {
     constructor(verticalPosition) {
@@ -242,7 +300,7 @@ class Enemy {
         this.movement = this.speed;
         this.health = 100;
         this.maxHealth = this.health;
-        this.enemyType = enemyTypes[0];
+        this.enemyType = enemyTypes[Math.floor(Math.random() * enemyTypes.length)]; //random enemy type from the array, stronger enemies will be regulated to appear less often in the array
         this.frameX = 0;
         this.frameY = 0;
         this.minFrame = 0;
