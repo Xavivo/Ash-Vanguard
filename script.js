@@ -252,10 +252,9 @@ class Enemy {
     }
     update(){
         this.x -= this.movement;
-        if (this.frameX < this.maxFrame) {
-            this.frameX++;
-        } else {
-            this.frameX = this.minFrame;
+        if (frame % 10 === 0) { //controls the speed of the enemy animation
+            if (this.frameX < this.maxFrame) this.frameX++;
+                else this.frameX = this.minFrame;
         }
     }
     draw() {
