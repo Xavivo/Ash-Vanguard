@@ -125,8 +125,9 @@ function handleProjectiles() {
 
 //ARCHER
 const defender1 = new Image();
+const defender1Shooting = new Image();
 defender1.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Archer/Archer_Idle.png';
-
+defender1Shooting.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Archer/Archer_Shoot.png';
 
 class Defender {
     constructor(x, y) {
@@ -135,6 +136,7 @@ class Defender {
         this.width = cellSize - cellGap * 2;
         this.height = cellSize - cellGap * 2; //this makes the defender smaller than the cell, leaving a gap to prevent it from colliding with enemies at other lanes
         this.shooting = false;
+        this.shootNow = false; //flag to control when to shoot
         this.health = 100;
         this.projectiles = [];
         this.timer = 0;
@@ -152,9 +154,16 @@ class Defender {
         ctx.fillStyle = 'gold';
         ctx.font = '30px Orbitron';
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
-        ctx.drawImage(defender1, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+        if (!this.shooting) {
+            ctx.drawImage(defender1, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+        } else {
+            ctx.drawImage(defender1Shooting, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+        }
     }
     update() {
+        //animation
+        if (frame % 17 === 0) {if (this.frameX < this.maxFrame) { this.frameX++; } else { this.frameX = this.minFrame; }} //controls the speed of the defender animation
+
         if (this.shooting){
             this.timer++;
             if (this.timer % 100 === 0) {
@@ -186,7 +195,7 @@ function handleDefenders() {
         if (enemyPosition.indexOf(defenders[i].y) !== -1) { //If indexOf returns -1, it means there is no enemy in that row
             defenders[i].shooting = true;
         } else {
-            defenders[i].shooting = false; // no enemies in that row
+            defenders[i].shooting = false; // if there aren't enemies in that row, stop shooting
         }
         for (let j = 0; j < enemies.length; j++) {
             if (defenders[i] && collision(defenders[i], enemies[j])) {
