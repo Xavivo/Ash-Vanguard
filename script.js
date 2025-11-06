@@ -13,6 +13,9 @@ let frame = 0;
 let gameOver = false;
 let score = 0;
 const winningScore = 500; //score needed to win the game
+let chosenDefender = 1;
+
+// game arrays
 
 const gameGrid = [];
 const defenders = [];
@@ -28,7 +31,16 @@ const mouse = {
     y: 10,
     width: 0.1,
     height: 0.1,
+    clicked: false
 }
+// mouse event listeners
+canvas.addEventListener('mousedown', function() {
+    mouse.clicked = true;
+});
+canvas.addEventListener('mouseup', function() {
+    mouse.clicked = false;
+});
+// get the position of the canvas relative to the window
 let canvasPosition = canvas.getBoundingClientRect();
 
 canvas.addEventListener('mousemove', function(e) {
@@ -128,7 +140,7 @@ const defender1 = new Image();
 defender1.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Archer/Archer_Spritesheet.png';
 
 const defender2 = new Image();
-defender2.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Lancer/Lancer_Spritesheet.png';
+defender2.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Lancer/Lancer_Spritesheet.png'; //Lancer right now is not rendering properly, need to check the spritesheet
 
 const defender3 = new Image();
 defender3.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Monk/Monk_Spritesheet.png';
@@ -153,6 +165,7 @@ class Defender {
         this.spriteHeight = 192;
         this.minFrame = 0;
         this.maxFrame = 13;
+        this.chosenDefender = chosenDefender;
     }
     draw() {
         //this draws the defenders hitbox, useful for debugging
@@ -161,7 +174,15 @@ class Defender {
         ctx.fillStyle = 'gold';
         ctx.font = '30px Orbitron';
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
-        ctx.drawImage(defender1, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+        if (this.chosenDefender === 1) {
+                    ctx.drawImage(defender1, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+        } else if (this.chosenDefender === 2) {
+                    ctx.drawImage(defender2, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+        } else if (this.chosenDefender === 3) {
+                    ctx.drawImage(defender3, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+        } else if (this.chosenDefender === 4) {
+                    ctx.drawImage(defender4, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+        }
     }
     update() {
         //animation
@@ -245,16 +266,49 @@ const card4 = {
     width: 100,
     height: 85,
 }
+
 function chooseDefender() {
+    let card1stroke = 'black';
+    let card2stroke = 'black';
+    let card3stroke = 'black';
+    let card4stroke = 'black';
+// highlight the chosen card
+    if (mouse.x && mouse.y && collision(mouse, card1)) {
+        card1stroke = 'gold';
+        chosenDefender = 1;
+    } else if (mouse.x && mouse.y && collision(mouse, card2)) {
+        card2stroke = 'gold';
+        chosenDefender = 2;
+    } else if (mouse.x && mouse.y && collision(mouse, card3)) {
+        card3stroke = 'gold';
+        chosenDefender = 3;
+    } else if (mouse.x && mouse.y && collision(mouse, card4)) {
+        card4stroke = 'gold';
+        chosenDefender = 4;
+    }
+
     ctx.lineWidth = 1;
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+
     ctx.fillRect(card1.x, card1.y, card1.width, card1.height);
+    ctx.strokeStyle = card1stroke;
+    ctx.strokeRect(card1.x, card1.y, card1.width, card1.height); //border
     ctx.drawImage(defender1, 0, 0, 192, 192, -10, -10, 140, 140);
+
     ctx.fillRect(card2.x, card2.y, card2.width, card2.height);
-    ctx.drawImage(defender1, 0, 0, 192, 192, 110, -10, 140, 140);
+    ctx.strokeStyle = card2stroke;
+    ctx.strokeRect(card2.x, card2.y, card2.width, card2.height); //border
+    ctx.drawImage(defender2, 0, 0, 192, 192, 110, -10, 140, 140);
+
     ctx.fillRect(card3.x, card3.y, card3.width, card3.height);
-    ctx.drawImage(defender1, 0, 0, 192, 192, 230, -10, 140, 140);
+    ctx.strokeStyle = card3stroke;
+    ctx.strokeRect(card3.x, card3.y, card3.width, card3.height); //border
+    ctx.drawImage(defender3, 0, 0, 192, 192, 230, -10, 140, 140);
+
     ctx.fillRect(card4.x, card4.y, card4.width, card4.height);
-    ctx.drawImage(defender1, 0, 0, 192, 192, 350, -10, 140, 140);
+    ctx.strokeStyle = card4stroke;
+    ctx.strokeRect(card4.x, card4.y, card4.width, card4.height); //border
+    ctx.drawImage(defender4, 0, 0, 192, 192, 350, -10, 140, 140);
 }
 
 
