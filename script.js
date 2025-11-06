@@ -127,6 +127,15 @@ function handleProjectiles() {
 const defender1 = new Image();
 defender1.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Archer/Archer_Spritesheet.png';
 
+const defender2 = new Image();
+defender2.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Lancer/Lancer_Spritesheet.png';
+
+const defender3 = new Image();
+defender3.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Monk/Monk_Spritesheet.png';
+
+const defender4 = new Image();
+defender4.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Warrior/Warrior_Spritesheet.png';
+
 class Defender {
     constructor(x, y) {
         this.x = x;
@@ -211,6 +220,7 @@ function handleDefenders() {
         }
     }
 }
+//defender selection cards (4 types of defenders to choose from right now)
 const card1 = {
     x: 10,
     y: 10,
@@ -238,9 +248,13 @@ const card4 = {
 function chooseDefender() {
     ctx.lineWidth = 1;
     ctx.fillRect(card1.x, card1.y, card1.width, card1.height);
+    ctx.drawImage(defender1, 0, 0, 192, 192, -10, -10, 140, 140);
     ctx.fillRect(card2.x, card2.y, card2.width, card2.height);
+    ctx.drawImage(defender1, 0, 0, 192, 192, 110, -10, 140, 140);
     ctx.fillRect(card3.x, card3.y, card3.width, card3.height);
+    ctx.drawImage(defender1, 0, 0, 192, 192, 230, -10, 140, 140);
     ctx.fillRect(card4.x, card4.y, card4.width, card4.height);
+    ctx.drawImage(defender1, 0, 0, 192, 192, 350, -10, 140, 140);
 }
 
 
