@@ -559,7 +559,7 @@ canvas.addEventListener('click', function() {
 
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = 'transparent';
     ctx.fillRect(0, 0, controlsBar.width, controlsBar.height);
     handleGameGrid();
     handleDefenders();
