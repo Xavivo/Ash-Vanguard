@@ -122,6 +122,12 @@ function handleProjectiles() {
 }
 
 //defenders
+
+//ARCHER
+const defender1 = new Image();
+defender1.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Archer/Archer_Idle.png';
+
+
 class Defender {
     constructor(x, y) {
         this.x = x;
@@ -132,13 +138,21 @@ class Defender {
         this.health = 100;
         this.projectiles = [];
         this.timer = 0;
+        this.frameX = 0;
+        this.frameY = 0;
+        this.spriteWidth = 192;
+        this.spriteHeight = 192;
+        this.minFrame = 0;
+        this.maxFrame = 5;
     }
     draw() {
-        ctx.fillStyle = 'blue';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        //this draws the defenders hitbox, useful for debugging
+        //ctx.fillStyle = 'blue';
+        //ctx.fillRect(this.x, this.y, this.width, this.height);
         ctx.fillStyle = 'gold';
         ctx.font = '30px Orbitron';
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
+        ctx.drawImage(defender1, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
     }
     update() {
         if (this.shooting){
@@ -316,8 +330,10 @@ class Enemy {
         }
     }
     draw() {
-        ctx.fillStyle = 'red';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        //this draws the enemies hitbox, useful for debugging
+        //ctx.fillStyle = 'red';
+        //ctx.fillRect(this.x, this.y, this.width, this.height);
+
         ctx.fillStyle = 'black';
         ctx.font = '30px Orbitron';
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
