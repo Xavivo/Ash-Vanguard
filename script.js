@@ -125,9 +125,7 @@ function handleProjectiles() {
 
 //ARCHER
 const defender1 = new Image();
-const defender1Shooting = new Image();
-defender1.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Archer/Archer_Idle.png';
-defender1Shooting.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Archer/Archer_Shoot.png';
+defender1.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Archer/Archer_Spritesheet.png';
 
 class Defender {
     constructor(x, y) {
@@ -145,7 +143,7 @@ class Defender {
         this.spriteWidth = 192;
         this.spriteHeight = 192;
         this.minFrame = 0;
-        this.maxFrame = 5;
+        this.maxFrame = 13;
     }
     draw() {
         //this draws the defenders hitbox, useful for debugging
@@ -154,26 +152,29 @@ class Defender {
         ctx.fillStyle = 'gold';
         ctx.font = '30px Orbitron';
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
-        if (!this.shooting) {
-            ctx.drawImage(defender1, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
-        } else {
-            ctx.drawImage(defender1Shooting, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
-        }
+        ctx.drawImage(defender1, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
     }
     update() {
         //animation
-        if (frame % 17 === 0) {if (this.frameX < this.maxFrame) { this.frameX++; } else { this.frameX = this.minFrame; }} //controls the speed of the defender animation
+        if (frame % 10 === 0) {
+            if (this.frameX < this.maxFrame) {
+                this.frameX++;
+                //loop back to the beginning of the idle animation if not shooting to avoid staying on the shooting end frame
+                if (this.frameX === 6) {
+                    if (!this.shooting) this.frameX = 0;
+                }
+            } 
+            else  this.frameX = this.minFrame; 
+            if (this.frameX === 11) this.shootNow = true;
+        
+        } //controls the speed of the defender animation
 
-        if (this.shooting){
-            this.timer++;
-            if (this.timer % 100 === 0) {
-                projectiles.push(new Projectile(this.x + 70, this.y + 50));
+        if (this.shooting && this.shootNow) {
+            projectiles.push(new Projectile(this.x + 70, this.y + 50));
+            this.shootNow = false;
             }
-        } else {
-            this.timer = 0;
-        }
     }
-}
+} //Shooting logic for defenders finished. DO NOT TOUCH unless wanting to increase/decrease shooting speed at line 159
 canvas.addEventListener('click', function() {
     const gridPositionX = mouse.x - (mouse.x % cellSize) + cellGap;
     const gridPositionY = mouse.y - (mouse.y % cellSize) + cellGap; //this will snap the defender to the grid
@@ -210,6 +211,38 @@ function handleDefenders() {
         }
     }
 }
+const card1 = {
+    x: 10,
+    y: 10,
+    width: 100,
+    height: 85,
+}
+const card2 = {
+    x: 130,
+    y: 10,
+    width: 100,
+    height: 85,
+}
+const card3 = {
+    x: 250,
+    y: 10,
+    width: 100,
+    height: 85,
+}
+const card4 = {
+    x: 370,
+    y: 10,
+    width: 100,
+    height: 85,
+}
+function chooseDefender() {
+    ctx.lineWidth = 1;
+    ctx.fillRect(card1.x, card1.y, card1.width, card1.height);
+    ctx.fillRect(card2.x, card2.y, card2.width, card2.height);
+    ctx.fillRect(card3.x, card3.y, card3.width, card3.height);
+    ctx.fillRect(card4.x, card4.y, card4.width, card4.height);
+}
+
 
 //Floating messages
 
@@ -362,7 +395,7 @@ function handleEnemies() {
         if (enemies[i].health <= 0) {
             let gainedResources = enemies[i].maxHealth / 10;
             floatingMessages.push(new FloatingMessage('+' + gainedResources, enemies[i].x, enemies[i].y, 30, 'black'));
-            floatingMessages.push(new FloatingMessage('+' + gainedResources, 250, 50, 30, 'gold'));
+            floatingMessages.push(new FloatingMessage('+' + gainedResources, 770, 50, 30, 'gold'));
             numberOfResources += gainedResources;
             score += gainedResources;
             const findThisIndex = enemyPosition.indexOf(enemies[i].y);
@@ -410,7 +443,7 @@ function handleResources() {
         if (resources[i] && mouse.x && mouse.y && collision(resources[i], mouse)) {
             numberOfResources += resources[i].amount;
             floatingMessages.push(new FloatingMessage('+' + resources[i].amount, resources[i].x, resources[i].y, 30, 'black'));
-            floatingMessages.push(new FloatingMessage('+' + resources[i].amount, 250, 50, 30, 'gold'));
+            floatingMessages.push(new FloatingMessage('+' + resources[i].amount, 770, 50, 30, 'gold'));
             resources.splice(i, 1);
             i--;
         }
@@ -422,8 +455,8 @@ function handleResources() {
 function handleGameStatus() {
     ctx.fillStyle = 'gold';
     ctx.font = '30px Orbitron';
-    ctx.fillText('Score: ' + score, 20, 35);
-    ctx.fillText('Resources: ' + numberOfResources, 20, 80);
+    ctx.fillText('Score: ' + score, 520, 35);
+    ctx.fillText('Resources: ' + numberOfResources, 520, 80);
     if (gameOver) {
         ctx.fillStyle = 'black';
         ctx.font = '90px Orbitron';
@@ -465,6 +498,7 @@ function animate() {
     handleResources();
     handleProjectiles();
     handleEnemies();
+    chooseDefender();
     handleGameStatus();
     handleFloatingMessages();
     frame++;
