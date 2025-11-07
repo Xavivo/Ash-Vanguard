@@ -93,12 +93,16 @@ function handleGameGrid() {
 }
 
 // projectiles
+
+const arrow = new Image();
+arrow.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Archer/Arrow.png';
+
 class Projectile {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.width = 10;
-        this.height = 10;
+        this.width = 60;
+        this.height = 30;
         this.power = 20;
         this.speed = 5;
     }
@@ -106,10 +110,7 @@ class Projectile {
         this.x += this.speed;
     }
     draw() {
-        ctx.fillStyle = 'black';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.width, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.drawImage(arrow, this.x, this.y, this.width, this.height);
     }
 }
 function handleProjectiles() {
@@ -186,6 +187,7 @@ class Defender {
     }
     update() {
         //animation
+        if (this.chosenDefender === 1 || this.chosenDefender === 2 || this.chosenDefender === 3) {
         if (frame % 10 === 0) {
             if (this.frameX < this.maxFrame) {
                 this.frameX++;
@@ -199,12 +201,55 @@ class Defender {
         
         } //controls the speed of the defender animation
 
-        if (this.shooting && this.shootNow) {
+    } else if (this.chosenDefender === 4) { //cuando no hay enemigos, hace los frames del 0 al 7, y cuando hay enemigos en la fila, hace todos los frames
+        this.maxFrame = 21;
+        if (frame % 10 === 0) {
+            if (this.frameX < this.maxFrame) {
+                this.frameX++;
+                //loop back to the beginning of the idle animation if not shooting to avoid staying on the shooting end frame
+                if (this.frameX === 7) {
+                    if (!this.shooting) this.frameX = 0;
+                }
+            } 
+            else  this.frameX = this.minFrame;
+            if (this.frameX === 12) this.shootNow = true;
+        
+        }
+
+}
+        
+        if (this.chosenDefender === 1) {
+            if (this.shooting && this.shootNow) {
             projectiles.push(new Projectile(this.x + 70, this.y + 50));
             this.shootNow = false;
             }
+        }
+        else if (this.chosenDefender === 2) {
+            if (this.shooting && this.shootNow) {
+            projectiles.push(new Projectile(this.x + 70, this.y + 50));
+            this.shootNow = false;
+            }
+        }
+        else if (this.chosenDefender === 3) {
+            if (this.shooting && this.shootNow) {
+            projectiles.push(new Projectile(this.x + 70, this.y + 50));
+            this.shootNow = false;
+            }
+        }
+        else if (this.chosenDefender === 4) {
+            for (let j = 0; j < enemies.length; j++) {
+                const enemy = enemies[j];
+                const sameRow = enemy.y === this.y;
+                const closeX = enemy.x < this.x + cellSize && enemy.x > this.x;
+                if (sameRow && closeX) {
+                    enemy.health -= 1;
+                    this.shooting = true;
+                    this.shootNow = false;
+                }
+        }
     }
-} //Shooting logic for defenders finished. DO NOT TOUCH unless wanting to increase/decrease shooting speed at line 159
+}
+} //Shooting logic for defenders finished. DO NOT TOUCH unless wanting to increase/decrease shooting speed
 canvas.addEventListener('click', function() {
     const gridPositionX = mouse.x - (mouse.x % cellSize) + cellGap;
     const gridPositionY = mouse.y - (mouse.y % cellSize) + cellGap; //this will snap the defender to the grid
