@@ -7,13 +7,13 @@ canvas.height = 600;
 
 const cellSize = 100;
 const cellGap = 3;
-let numberOfResources = 300;
+let numberOfResources = 3000;
 let enemiesInterval = 600;
 let frame = 0;
 let gameOver = false;
 let score = 0;
 const winningScore = 500; //score needed to win the game
-let chosenDefender = 1;
+let chosenDefender = 1; //starts with archer selected always
 
 // game arrays
 
@@ -141,7 +141,7 @@ const defender1 = new Image();
 defender1.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Archer/Archer_Spritesheet.png';
 
 const defender2 = new Image();
-defender2.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Lancer/Lancer_Spritesheet.png'; //Lancer right now is not rendering properly, need to check the spritesheet
+defender2.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Lancer/Lancer_Spritesheet.png';
 
 const defender3 = new Image();
 defender3.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Monk/Monk_Spritesheet.png';
@@ -168,12 +168,6 @@ class Defender {
         this.maxFrame = 13;
         this.chosenDefender = chosenDefender;
 
-        if (this.chosenDefender === 4) { //had some trouble with warrior animations, this fixes it
-            this.minFrame = 14;
-            this.maxFrame = 21;
-            this.frameX = 14;     // starts directly on idle
-            this.isAttacking = false;
-        }
 
         if (this.chosenDefender === 2) { //lancer has more frames
             this.minFrame = 0;
@@ -181,7 +175,24 @@ class Defender {
             this.frameX = 0;
             this.spriteHeight = 322;
             this.spriteWidth = 322;
+            this.health = 700 //stats balancing
+            this.isAttacking = false;
             
+        }
+
+        if (this.chosenDefender === 3 ) {
+            this. health = 300
+        }
+
+
+        if (this.chosenDefender === 4) { //had some trouble with warrior animations, this fixes it
+            this.minFrame = 14;
+            this.maxFrame = 21;
+            this.frameX = 14;     // starts directly on idle
+            this.isAttacking = false;
+
+            //initial stats for warrior, he is like a mini tank
+            this.health = 500
         }
 
     }
@@ -228,7 +239,7 @@ class Defender {
     }
     update() {
         //animation
-        if (this.chosenDefender === 1 || this.chosenDefender === 2 || this.chosenDefender === 3) {
+        if (this.chosenDefender === 1 || this.chosenDefender === 3) {
         if (frame % 10 === 0) {
             if (this.frameX < this.maxFrame) {
                 this.frameX++;
@@ -242,6 +253,40 @@ class Defender {
         
         } //controls the speed of the defender animation
 
+    } else if (this.chosenDefender === 2) {
+        // looks for enemies in front of him
+        let frontEnemy = false;
+
+        for (let enemy of enemies) {
+            const sameRow = enemy.y === this.y;
+            // more ranged attacks
+            const inRange = enemy.x < this.x + cellSize * 1.5 && enemy.x > this.x;
+            if (sameRow && inRange) {
+                frontEnemy = true;
+                // only deals damage when in attacking frames
+                if (this.frameX >= 6 && this.frameX <= 9) {
+                    enemy.health -= 1.5;
+                }
+            }
+        }
+        
+        // activates or desactivates if there's or not an enemy
+        this.isAttacking = frontEnemy;
+
+        // changes frames depending on it's state
+        if (this.isAttacking) {
+            this.minFrame = 12;
+            this.maxFrame = 20;  //attack
+        } else {
+            this.minFrame = 0;
+            this.maxFrame = 11;  // idle
+        }
+
+        // animation speed
+        if (frame % 10 === 0) {
+            this.frameX++;
+            if (this.frameX > this.maxFrame) this.frameX = this.minFrame;
+        }
     } else if (this.chosenDefender === 4) {
         // looks for enemies in front of him
         let frontEnemy = false;
@@ -284,10 +329,16 @@ class Defender {
             }
         }
         else if (this.chosenDefender === 2) {
-            if (this.shooting && this.shootNow) {
-            projectiles.push(new Projectile(this.x + 70, this.y + 50));
-            this.shootNow = false;
-            }
+            for (let j = 0; j < enemies.length; j++) {
+                const enemy = enemies[j];
+                const sameRow = enemy.y === this.y;
+                const closeX = enemy.x < this.x + cellSize && enemy.x > this.x;
+                if (sameRow && closeX) {
+                    enemy.health -= 1;
+                    this.shooting = true;
+                    this.shootNow = false;
+                }
+        }
         }
         else if (this.chosenDefender === 3) {
             if (this.shooting && this.shootNow) {
@@ -317,7 +368,10 @@ canvas.addEventListener('click', function() {
         if (defenders[i].x === gridPositionX && defenders[i].y === gridPositionY)
         return;
     }
-    let defenderCost = 100;
+    let defenderCost = 100; //Archer
+    if (chosenDefender === 2) defenderCost = 300; // Lancer
+    if (chosenDefender === 3) defenderCost = 150; // Monk
+    if (chosenDefender === 4) defenderCost = 200; // Warrior
     if (numberOfResources >= defenderCost) {
         defenders.push(new Defender(gridPositionX, gridPositionY));
         numberOfResources -= defenderCost;
@@ -667,7 +721,10 @@ canvas.addEventListener('click', function() {
         if (defenders[i].x === gridPositionX && defenders[i].y === gridPositionY)
         return;
     }
-    let defenderCost = 100;
+    let defenderCost = 100; //Archer
+    if (chosenDefender === 2) defenderCost = 300; // Lancer
+    if (chosenDefender === 3) defenderCost = 150; // Monk
+    if (chosenDefender === 4) defenderCost = 200; // Warrior
     if (numberOfResources >= defenderCost) {
         defenders.push(new Defender(gridPositionX, gridPositionY));
         numberOfResources -= defenderCost;
