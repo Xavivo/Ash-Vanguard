@@ -175,23 +175,56 @@ class Defender {
             this.isAttacking = false;
         }
 
+        if (this.chosenDefender === 2) { //lancer has more frames
+            this.minFrame = 0;
+            this.maxFrame = 38;
+            this.frameX = 0;
+            this.spriteHeight = 322;
+            this.spriteWidth = 322;
+            
+        }
+
     }
     draw() {
-        //this draws the defenders hitbox, useful for debugging
-        //ctx.fillStyle = 'blue';
-        //ctx.fillRect(this.x, this.y, this.width, this.height);
-        ctx.fillStyle = 'gold';
-        ctx.font = '30px Orbitron';
-        ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
-        if (this.chosenDefender === 1) {
-                    ctx.drawImage(defender1, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
-        } else if (this.chosenDefender === 2) {
-                    ctx.drawImage(defender2, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
-        } else if (this.chosenDefender === 3) {
-                    ctx.drawImage(defender3, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
-        } else if (this.chosenDefender === 4) {
-                    ctx.drawImage(defender4, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
-        }
+        //Shows health, will be removed
+    ctx.fillStyle = 'gold';
+    ctx.font = '30px Orbitron';
+    ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
+
+    let sprite;
+    if (this.chosenDefender === 1) sprite = defender1;
+    else if (this.chosenDefender === 2) sprite = defender2;
+    else if (this.chosenDefender === 3) sprite = defender3;
+    else if (this.chosenDefender === 4) sprite = defender4;
+
+    // Only for lancer
+    let drawWidth = this.width;
+    let drawHeight = this.height;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    if (this.chosenDefender === 2) {
+        const scale = 1.8;
+        drawWidth = this.width * scale;
+        drawHeight = this.height * scale;
+
+        // Center Lancer sprite on his cell
+        offsetX = -((drawWidth - this.width) / 2);
+        offsetY = -((drawHeight - this.height) / 2);
+    }
+
+    ctx.drawImage(
+        sprite,
+        this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight,
+        this.x + offsetX,
+        this.y + offsetY,
+        drawWidth,
+        drawHeight
+    );
+
+    //this shows the borders of the defender hitbox, useful for debugging
+    ctx.strokeStyle = 'blue';
+    ctx.strokeRect(this.x, this.y, this.width, this.height);
     }
     update() {
         //animation
@@ -369,7 +402,7 @@ function chooseDefender() {
     ctx.fillRect(card2.x, card2.y, card2.width, card2.height);
     ctx.strokeStyle = card2stroke;
     ctx.strokeRect(card2.x, card2.y, card2.width, card2.height); //border
-    ctx.drawImage(defender2, 0, 0, 192, 192, 110, -10, 140, 140);
+    ctx.drawImage(defender2, 80, 80, 192, 192, 120, 0, 140, 140);
 
     ctx.fillRect(card3.x, card3.y, card3.width, card3.height);
     ctx.strokeStyle = card3stroke;
