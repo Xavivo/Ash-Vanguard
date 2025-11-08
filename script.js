@@ -565,7 +565,7 @@ function handleEnemies() {
         }
         //remove enemies if health is 0
         if (enemies[i].health <= 0) {
-            let gainedResources = enemies[i].maxHealth / 10;
+            let gainedResources = enemies[i].maxHealth / 5; //how much coins does each enemy drop when defeated
             floatingMessages.push(new FloatingMessage('+' + gainedResources, enemies[i].x, enemies[i].y, 30, 'black'));
             floatingMessages.push(new FloatingMessage('+' + gainedResources, 770, 50, 30, 'gold'));
             numberOfResources += gainedResources;
@@ -589,20 +589,35 @@ function handleEnemies() {
 //resources
 //randomly spawns resources on the map
 const amounts = [20, 30, 40];
+
+const resourceGoldenCoin = new Image();
+resourceGoldenCoin.src = 'public/pixel_items/coins.png';
+
 class Resource {
     constructor() { //random position and amount of resources
         this.x = Math.random() * (canvas.width - cellSize);
         this.y = (Math.floor(Math.random() * 5) + 1) * cellSize + 25;
-        this.width = cellSize * 0.6;
-        this.height = cellSize * 0.6;
+        this.width = cellSize * 0.5;
+        this.height = cellSize * 0.5;
         this.amount = amounts[Math.floor(Math.random() * amounts.length)];
     }
     draw() { //draw the resource
-        ctx.fillStyle = 'yellow';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        //the coin slightly floats on the y axis
+        const floatAmplitude = 5; 
+        const floatSpeed = 0.05;
+
+        const floatOffset = Math.sin(frame * floatSpeed + this.x) * floatAmplitude;
+
+        ctx.drawImage(
+        resourceGoldenCoin,
+        this.x,
+        this.y + floatOffset,
+        this.width,
+        this.height
+        );
         ctx.fillStyle = 'black';
         ctx.font = '20px Orbitron';
-        ctx.fillText(this.amount, this.x + 15, this.y + 25);
+        ctx.fillText(this.amount, this.x + 15, this.y);
     }
 }
 
