@@ -167,6 +167,14 @@ class Defender {
         this.minFrame = 0;
         this.maxFrame = 13;
         this.chosenDefender = chosenDefender;
+
+        if (this.chosenDefender === 4) { //had some trouble with warrior animations, this fixes it
+            this.minFrame = 14;
+            this.maxFrame = 21;
+            this.frameX = 14;     // starts directly on idle
+            this.isAttacking = false;
+        }
+
     }
     draw() {
         //this draws the defenders hitbox, useful for debugging
@@ -201,22 +209,40 @@ class Defender {
         
         } //controls the speed of the defender animation
 
-    } else if (this.chosenDefender === 4) { //cuando no hay enemigos, hace los frames del 0 al 7, y cuando hay enemigos en la fila, hace todos los frames
-        this.maxFrame = 21;
-        if (frame % 10 === 0) {
-            if (this.frameX < this.maxFrame) {
-                this.frameX++;
-                //loop back to the beginning of the idle animation if not shooting to avoid staying on the shooting end frame
-                if (this.frameX === 7) {
-                    if (!this.shooting) this.frameX = 0;
+    } else if (this.chosenDefender === 4) {
+        // looks for enemies in front of him
+        let frontEnemy = false;
+        for (let enemy of enemies) {
+            const sameRow = enemy.y === this.y;
+            const inFront = enemy.x < this.x + cellSize && enemy.x > this.x;
+            if (sameRow && inFront) {
+                frontEnemy = true;
+                // only deals damage when in attacking frames
+                if (this.frameX >= 6 && this.frameX <= 9) {
+                    enemy.health -= 1.5;
                 }
-            } 
-            else  this.frameX = this.minFrame;
-            if (this.frameX === 12) this.shootNow = true;
-        
+            }
         }
 
-}
+        // activates or desactivates if there's or not an enemy
+        this.isAttacking = frontEnemy;
+
+        // changes frames depending on it's state
+        if (this.isAttacking) {
+            this.minFrame = 0;
+            this.maxFrame = 13;  //attack
+        } else {
+            this.minFrame = 14;
+            this.maxFrame = 21;  // idle
+        }
+
+        // animation speed
+        if (frame % 10 === 0) {
+            this.frameX++;
+            if (this.frameX > this.maxFrame) this.frameX = this.minFrame;
+        }
+    }
+
         
         if (this.chosenDefender === 1) {
             if (this.shooting && this.shootNow) {
