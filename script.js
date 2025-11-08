@@ -182,6 +182,9 @@ class Defender {
 
         if (this.chosenDefender === 3 ) {
             this. health = 300
+            this.frameX = 11
+            this.maxFrame = 22
+            this.minFrame = 11
         }
 
 
@@ -237,9 +240,31 @@ class Defender {
     ctx.strokeStyle = 'blue';
     ctx.strokeRect(this.x, this.y, this.width, this.height);
     }
+
+    //monk hability
+    healAllies() {
+        const healRange = cellSize * 2; // he can heal up to 2 cells away
+        const healAmount = 1.2;         // health restored per heal
+
+    for (let ally of defenders) {
+        if (ally === this) continue; // he doesn't heal itself
+
+        const dx = ally.x - this.x;
+        const dy = ally.y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < healRange && ally.health < 100) {
+            ally.health = Math.min(ally.health + healAmount, 100);
+            floatingMessages.push(
+                new FloatingMessage('+Heal', ally.x + 30, ally.y, 20, 'green')
+            );
+        }
+    }
+    }
+
     update() {
         //animation
-        if (this.chosenDefender === 1 || this.chosenDefender === 3) {
+        if (this.chosenDefender === 1) {
         if (frame % 10 === 0) {
             if (this.frameX < this.maxFrame) {
                 this.frameX++;
@@ -286,6 +311,16 @@ class Defender {
         if (frame % 10 === 0) {
             this.frameX++;
             if (this.frameX > this.maxFrame) this.frameX = this.minFrame;
+        }
+    } else if (this.chosenDefender === 3) {
+        if (frame % 10 === 0) {
+            if (this.frameX < this.maxFrame) {
+                this.frameX++;
+                //loop back to the beginning of the idle animation if not shooting to avoid staying on the shooting end frame
+                
+            } 
+            else  this.frameX = this.minFrame; 
+        
         }
     } else if (this.chosenDefender === 4) {
         // looks for enemies in front of him
@@ -341,10 +376,7 @@ class Defender {
         }
         }
         else if (this.chosenDefender === 3) {
-            if (this.shooting && this.shootNow) {
-            projectiles.push(new Projectile(this.x + 70, this.y + 50));
-            this.shootNow = false;
-            }
+            this.healAllies();
         }
         else if (this.chosenDefender === 4) {
             for (let j = 0; j < enemies.length; j++) {
