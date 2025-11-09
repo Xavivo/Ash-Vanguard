@@ -324,14 +324,14 @@ class Defender {
             this.maxFrame = 20;  //attack
         } else {
             this.minFrame = 0;
-            this.maxFrame = 11;  // idle
+            this.maxFrame = 0;  // idle, lancer spritesheet glitches
         }
 
         // animation speed
         if (frame % 10 === 0) {
             this.frameX++;
             if (this.frameX > this.maxFrame) this.frameX = this.minFrame;
-        }
+        } console.log("min frame: " + this.minFrame + "max frame: " + this.maxFrame)
     } else if (this.chosenDefender === 3) {
         
         // controla cada cuánto puede curar
