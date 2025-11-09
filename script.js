@@ -158,6 +158,10 @@ class Defender {
         this.shooting = false;
         this.shootNow = false; //flag to control when to shoot
         this.health = 100;
+        this.maxHealth = 100; //for the monk
+        this.healCooldown = 0; // frame counting for healing cooldown
+        this.healInterval = 600; // 600 frames ≈ 10 seconds
+        this.hasHealed = false; //for the monk animation
         this.projectiles = [];
         this.timer = 0;
         this.frameX = 0;
@@ -175,16 +179,25 @@ class Defender {
             this.frameX = 0;
             this.spriteHeight = 322;
             this.spriteWidth = 322;
-            this.health = 700 //stats balancing
+            this.health = 700; //stats balancing
+            this.maxHealth = 700;
             this.isAttacking = false;
             
         }
 
         if (this.chosenDefender === 3 ) {
-            this. health = 300
-            this.frameX = 11
-            this.maxFrame = 22
-            this.minFrame = 11
+            this. health = 300;
+            this.maxHealth = 300;
+            this.frameX = 11;
+            this.maxFrame = 22;
+            this.minFrame = 11;
+            this.healCooldown = 0; // frame counting for healing cooldown
+            this.healInterval = 600; // 600 frames ≈ 10 seconds
+
+            this.isHealing = false;
+            this.healAnimationTimer = 0;
+            this.healAnimationDuration = 350; // aprox 350 frames ≈ 5.5s
+
         }
 
 
@@ -195,7 +208,8 @@ class Defender {
             this.isAttacking = false;
 
             //initial stats for warrior, he is like a mini tank
-            this.health = 500
+            this.health = 500;
+            this.maxHealth = 500;
         }
 
     }
@@ -244,7 +258,7 @@ class Defender {
     //monk hability
     healAllies() {
         const healRange = cellSize * 2; // he can heal up to 2 cells away
-        const healAmount = 1.2;         // health restored per heal
+        const healAmount = 50;         // health restored per heal
 
     for (let ally of defenders) {
         if (ally === this) continue; // he doesn't heal itself
@@ -253,12 +267,18 @@ class Defender {
         const dy = ally.y - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < healRange && ally.health < 100) {
-            ally.health = Math.min(ally.health + healAmount, 100);
+        if (distance < healRange && ally.health < ally.maxHealth * 0.8) { //the monk heals when it's partner is below 80% health
+            ally.health = Math.min(ally.health + healAmount, ally.maxHealth);
+            this.hasHealed = true;
+            this.isHealing = true;
+            this.healAnimationTimer = 0;
             floatingMessages.push(
                 new FloatingMessage('+Heal', ally.x + 30, ally.y, 20, 'green')
             );
         }
+
+       
+       
     }
     }
 
@@ -313,15 +333,44 @@ class Defender {
             if (this.frameX > this.maxFrame) this.frameX = this.minFrame;
         }
     } else if (this.chosenDefender === 3) {
-        if (frame % 10 === 0) {
-            if (this.frameX < this.maxFrame) {
-                this.frameX++;
-                //loop back to the beginning of the idle animation if not shooting to avoid staying on the shooting end frame
-                
-            } 
-            else  this.frameX = this.minFrame; 
         
+        // controla cada cuánto puede curar
+    if (this.healCooldown < this.healInterval) {
+        this.healCooldown++; // ≈ una vez cada 10 segundos
+    } else {
+        this.healAllies();
+        this.healCooldown = 0;
+        this.hasHealed = true;
+        this.isHealing = true;
+        this.healAnimationTimer = 0;
+    }
+
+    // animation logic
+    if (frame % 10 === 0) {
+        this.frameX++;
+        if (this.frameX > this.maxFrame) this.frameX = this.minFrame;
+    }
+    if (this.isHealing) {
+        this.minFrame = 0;
+        this.maxFrame = 10;
+        this.healAnimationTimer++;
+
+        // aprox 1s when animation ends
+        if (this.healAnimationTimer > 60) {
+            this.isHealing = false;
+            this.hasHealed = false;
+            this.minFrame = 11;
+            this.maxFrame = 22;
+            this.frameX = this.minFrame;
         }
+
+    } else {
+        // idle frames
+        this.minFrame = 11;
+        this.maxFrame = 22;
+    }
+
+
     } else if (this.chosenDefender === 4) {
         // looks for enemies in front of him
         let frontEnemy = false;
@@ -374,9 +423,6 @@ class Defender {
                     this.shootNow = false;
                 }
         }
-        }
-        else if (this.chosenDefender === 3) {
-            this.healAllies();
         }
         else if (this.chosenDefender === 4) {
             for (let j = 0; j < enemies.length; j++) {
