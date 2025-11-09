@@ -643,12 +643,8 @@ enemy13.src = 'public/Enemies/Dark_Oracle_1/DarkOracle_1_Spritesheet.png';
 enemyTypes.push(enemy13);
 //DARK ORACLE 2
 const enemy14 = new Image();
-enemy14.src = 'public/Enemies/Dark_Oracle_1/DarkOracle_1_Spritesheet.png';
+enemy14.src = 'public/Enemies/Dark_Oracle_2/DarkOracle_2_Spritesheet.png';
 enemyTypes.push(enemy14);
-//DARK ORACLE 3
-const enemy15 = new Image();
-enemy15.src = 'public/Enemies/Dark_Oracle_1/DarkOracle_1_Spritesheet.png';
-enemyTypes.push(enemy15);
 
 class Enemy {
     constructor(verticalPosition) {
