@@ -7,12 +7,12 @@ canvas.height = 600;
 
 const cellSize = 100;
 const cellGap = 3;
-let numberOfResources = 3000;
+let numberOfResources = 200;
 let enemiesInterval = 600;
 let frame = 0;
 let gameOver = false;
 let score = 0;
-const winningScore = 500; //score needed to win the game
+const winningScore = 1000; //score needed to win the game
 let chosenDefender = 1; //starts with archer selected always
 
 // game arrays
@@ -103,7 +103,7 @@ class Projectile {
         this.y = y;
         this.width = 60;
         this.height = 30;
-        this.power = 20;
+        this.power = 50;
         this.speed = 5;
     }
     update() {
@@ -139,13 +139,13 @@ function handleProjectiles() {
 //ARCHER
 const defender1 = new Image();
 defender1.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Archer/Archer_Spritesheet.png';
-
+//LANCER
 const defender2 = new Image();
 defender2.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Lancer/Lancer_Spritesheet.png';
-
+//MONK
 const defender3 = new Image();
 defender3.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Monk/Monk_Spritesheet.png';
-
+//WARRIOR || SWORDMAN
 const defender4 = new Image();
 defender4.src = 'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Warrior/Warrior_Spritesheet.png';
 
@@ -215,9 +215,9 @@ class Defender {
     }
     draw() {
         //Shows health, will be removed
-    ctx.fillStyle = 'gold';
-    ctx.font = '30px Orbitron';
-    ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
+        //ctx.fillStyle = 'gold';
+        //ctx.font = '30px Orbitron';
+        //ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
 
     let sprite;
     if (this.chosenDefender === 1) sprite = defender1;
@@ -251,8 +251,8 @@ class Defender {
     );
 
     //this shows the borders of the defender hitbox, useful for debugging
-    ctx.strokeStyle = 'blue';
-    ctx.strokeRect(this.x, this.y, this.width, this.height);
+    //ctx.strokeStyle = 'blue';
+    //ctx.strokeRect(this.x, this.y, this.width, this.height);
     }
 
     //monk hability
@@ -334,9 +334,9 @@ class Defender {
         } console.log("min frame: " + this.minFrame + "max frame: " + this.maxFrame)
     } else if (this.chosenDefender === 3) {
         
-        // controla cada cuánto puede curar
+        // controls how much the monk heals
     if (this.healCooldown < this.healInterval) {
-        this.healCooldown++; // ≈ una vez cada 10 segundos
+        this.healCooldown++; // Once every 10 seconds
     } else {
         this.healAllies();
         this.healCooldown = 0;
@@ -658,7 +658,7 @@ class Enemy {
         this.height = cellSize - cellGap * 2;
         this.speed = Math.random() * 0.2 + 0.4;
         this.movement = this.speed;
-        this.health = 100;
+        this.health = 250;
         this.maxHealth = this.health;
         this.enemyType = enemyTypes[Math.floor(Math.random() * enemyTypes.length)]; //random enemy type from the array, stronger enemies will be regulated to appear less often in the array
         this.frameX = 0;
@@ -679,10 +679,10 @@ class Enemy {
         //this draws the enemies hitbox, useful for debugging
         //ctx.fillStyle = 'red';
         //ctx.fillRect(this.x, this.y, this.width, this.height);
-
-        ctx.fillStyle = 'black';
-        ctx.font = '30px Orbitron';
-        ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
+        //this draws enemy's healthbar
+        //ctx.fillStyle = 'black';
+        //ctx.font = '30px Orbitron';
+        //ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
         ctx.drawImage(this.enemyType, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
     }
 }
