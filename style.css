@@ -1,6 +1,6 @@
 body {
     background-image: url("public/background.png");
-    background-size: cover;
+   
 }
 
 #canvas1 {
@@ -16,6 +16,8 @@ body {
 
     box-shadow: 0 0 14px rgba(153, 255, 0, 0.05);
 }
+
+
 
 .orbitron-font {
   font-family: "Orbitron", sans-serif;
