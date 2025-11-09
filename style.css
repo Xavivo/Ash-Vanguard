@@ -1,5 +1,6 @@
 body {
     background-image: url("public/Background.png");
+    background-size: cover;
 }
 
 #canvas1 {

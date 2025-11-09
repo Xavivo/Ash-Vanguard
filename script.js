@@ -331,7 +331,7 @@ class Defender {
         if (frame % 10 === 0) {
             this.frameX++;
             if (this.frameX > this.maxFrame) this.frameX = this.minFrame;
-        } console.log("min frame: " + this.minFrame + "max frame: " + this.maxFrame)
+        }
     } else if (this.chosenDefender === 3) {
         
         // controls how much the monk heals
@@ -525,7 +525,7 @@ function chooseDefender() {
 
     ctx.lineWidth = 1;
     ctx.fillStyle = 'rgba(0,0,0,0.2)';
-
+    
     ctx.fillRect(card1.x, card1.y, card1.width, card1.height);
     ctx.strokeStyle = card1stroke;
     ctx.strokeRect(card1.x, card1.y, card1.width, card1.height); //border
@@ -774,8 +774,8 @@ function handleResources() {
 function handleGameStatus() {
     ctx.fillStyle = 'gold';
     ctx.font = '30px Orbitron';
-    ctx.fillText('Score: ' + score, 520, 35);
-    ctx.fillText('Resources: ' + numberOfResources, 520, 80);
+    ctx.fillText('Score: ' + score, 520, 45);
+    ctx.fillText('Resources: ' + numberOfResources, 520, 85);
     if (gameOver) {
         ctx.fillStyle = 'black';
         ctx.font = '90px Orbitron';
@@ -803,6 +803,7 @@ canvas.addEventListener('click', function() {
     if (chosenDefender === 2) defenderCost = 300; // Lancer
     if (chosenDefender === 3) defenderCost = 150; // Monk
     if (chosenDefender === 4) defenderCost = 200; // Warrior
+   
     if (numberOfResources >= defenderCost) {
         defenders.push(new Defender(gridPositionX, gridPositionY));
         numberOfResources -= defenderCost;
