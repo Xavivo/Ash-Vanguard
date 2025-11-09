@@ -11,14 +11,64 @@
 </head>
 <body>
 
-    <div class="Menu">
+    <div class="Menu" id="menu">
         <h1 class="title">Ash Vanguard</h1>
         <button id="playButton">Press to play</button>
     </div>
     
+    <!-- Loading screen -->
+  <div id="loader">
+      <h2>Loading game... <br> Please wait</h2>
+        <div id="progress">
+            <div id="bar"></div>
+        </div>
+  </div>
+
     <script>
-    document.getElementById('playButton').addEventListener('click', () => {
-      window.location.href = 'game.html'; // goes to the game
+    //constant variables
+    const playBtn = document.getElementById('playButton');
+    const menu = document.getElementById('menu');
+    const loader = document.getElementById('loader');
+    const bar = document.getElementById('bar');
+
+    // Files to preload
+    const assets = [
+      'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Archer/Arrow.png', //arrow
+      'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Archer/Archer_Spritesheet.png', //archer
+      'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Lancer/Lancer_Spritesheet.png', //lancer
+      'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Monk/Monk_Spritesheet.png', //monk
+      'public/Defenders/Tiny Swords (Free Pack)/Units/Black Units/Warrior/Warrior_Spritesheet.png', //warrior
+      'public/background.png',
+      'public/Paths.png',
+    ];
+
+     function preloadAssets() {
+      let loaded = 0;
+      assets.forEach(src => {
+        const img = new Image();
+        img.onload = () => {
+          loaded++;
+          const percent = Math.round((loaded / assets.length) * 100);
+          bar.style.width = percent + '%';
+          if (loaded === assets.length) {
+            setTimeout(() => {
+              window.location.href = 'game.html';
+            }, 400);
+          }
+        };
+        img.onerror = () => {
+          console.warn('Could not load:', src);
+          loaded++;
+        };
+        img.src = src;
+      });
+    }
+
+    playBtn.addEventListener('click', () => {
+      // Hide menu and show loading screen
+      menu.style.display = 'none';
+      loader.style.display = 'block';
+      preloadAssets();
     });
     </script>
 </body>
