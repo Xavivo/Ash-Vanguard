@@ -1,0 +1,43 @@
+body {
+    background-image: url("public/background.png");
+   
+}
+
+#canvas1 {
+ 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px;
+    height: 600px;
+    background-image: url("public/Paths.png");
+    font-family: 'Orbitron', sans-serif;
+
+    box-shadow: 0 0 14px rgba(153, 255, 0, 0.05);
+}
+
+
+
+.orbitron-font {
+  font-family: "Orbitron", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+#menuButton {
+  padding: 10px 25px;
+  font-size: 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: grey;
+  color: white;
+  transition: 0.2s;
+}
+
+#menuButton:hover {
+  background-color: rgb(185, 185, 185);
+  color: black;
+}
