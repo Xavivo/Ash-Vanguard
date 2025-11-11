@@ -11,15 +11,53 @@
 </head>
 <body>
     <button id="menuButton">Back to menu</button>
+    <button id="muteButton">🔊 Mute</button>
+
+    <audio id="bgMusic" src="public/MenuMusic.ogg" loop></audio>
 
    <canvas id="canvas1"></canvas> <!--whole game-->
 
     <script src="script.js"></script> 
 
     <script>
+    //back to menu
     document.getElementById('menuButton').addEventListener('click', () => {
     window.location.href = 'index.html';
     });
+    // handling music
+    //Music can't start if the user doesn't interact with the page
+    window.addEventListener('DOMContentLoaded', () => {
+    const bgMusic = document.getElementById('bgMusic');
+    const shouldPlay = localStorage.getItem('musicShouldPlay');
+    const savedVolume = localStorage.getItem('menuVolume');
+    const muteButton = document.getElementById('muteButton');
+     const savedMute = localStorage.getItem('musicMuted');
+
+    //default volume
+    bgMusic.volume = savedVolume ? savedVolume / 100 : 0.75;
+
+    //restore mute state
+      if (savedMute === 'true') {
+        bgMusic.muted = true;
+        muteButton.textContent = '🔇 Unmute';
+      }
+
+    //toggle mute/unmute
+      muteButton.addEventListener('click', () => {
+        bgMusic.muted = !bgMusic.muted;
+        muteButton.textContent = bgMusic.muted ? '🔇 Unmute' : '🔊 Mute';
+        localStorage.setItem('musicMuted', bgMusic.muted);
+      });  
+
+    //if allowed, starts music
+    if (shouldPlay === 'true') {
+      bgMusic.play().catch(err => console.warn('Autoplay blocked:', err));
+    }
+
+    // Doesn't repeat when loading again
+    localStorage.removeItem('musicShouldPlay');
+  });
+
     </script>
 
 </body>

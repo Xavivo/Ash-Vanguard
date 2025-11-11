@@ -14,7 +14,42 @@
     <div class="Menu" id="menu">
         <h1 class="title">Ash Vanguard</h1>
         <button id="playButton">Press to play</button>
+        <button id="mainCard">Template 1</button>
+        <button id="mainCard">Template 2</button>
+        <button id="mainCard">Template 3</button>
+       </div> 
+
+
+       <div class="cardLeft">
+        <h3>⚙️ Settings</h3>
+        <p>Here you can modify the volume of the game (it will play when you press the "play" Button)</p>
+
+        <label for="volumeControl">Volume control:   </label>
+        <input type="range" id="volumeControl" min="0" max="100" value="75">
+
+        <div class="Languaje">
+          <label for="languajeSelect">Idioma:</label>
+        <select id="languajeSelect">
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+        </select>
+        </div>
+
+        <div class="fullScreen">
+        <label for="fullscreen-toggle">Full Screen: </label>
+        <input type="checkbox" id="fullscreen-toggle">
+        </div>
+
     </div>
+
+       <div class="gifContainer">
+        <img src="public/pixel_items/mainPageGif2.gif" alt="Loading screen GIF" width="200" height="150">
+        <img src="public/pixel_items/mainPageGif1.gif" alt="Loading screen GIF" width="340" height="150">
+       </div>
+
+    <!-- 🔊 Background music -->
+  <audio id="bgMusic" src="public/MenuMusic.ogg" loop autoplay muted></audio>
+
     
     <!-- Loading screen -->
   <div id="loader">
@@ -39,6 +74,7 @@
     const menu = document.getElementById('menu');
     const loader = document.getElementById('loader');
     const bar = document.getElementById('bar');
+    const volumeControl = document.getElementById('volumeControl');
 
     // Files to preload
     const assets = [
@@ -77,6 +113,8 @@
           bar.style.width = percent + '%';
           if (loaded === assets.length) {
             setTimeout(() => {
+              localStorage.setItem('menuVolume', volumeControl.value);
+              localStorage.setItem('musicShouldPlay', 'true');
               window.location.href = 'game.html';
             }, 400);
           }
@@ -89,8 +127,8 @@
       });
     }
 
+    // Hide menu and show loading screen
     playBtn.addEventListener('click', () => {
-      // Hide menu and show loading screen
       menu.style.display = 'none';
       loader.style.display = 'block';
       preloadAssets();

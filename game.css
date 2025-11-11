@@ -26,7 +26,7 @@ body {
   font-style: normal;
 }
 
-#menuButton {
+#menuButton, #muteButton {
   padding: 10px 25px;
   font-size: 20px;
   cursor: pointer;
@@ -35,6 +35,13 @@ body {
   background-color: grey;
   color: white;
   transition: 0.2s;
+}
+
+#muteButton {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 20px; 
 }
 
 #menuButton:hover {
