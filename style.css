@@ -18,10 +18,8 @@ body {
 }
 
 .gifContainer {
- display: flex;
-    /* Opcional: Centra las imágenes horizontalmente si hay espacio extra */
-   
-    gap: 700px;
+  display: flex; 
+  gap: 700px;
 }
 
 .cardLeft {
